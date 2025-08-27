@@ -17,22 +17,32 @@ export const listRuns = (project_id?: string, status?: string, limit = 20, offse
   return api<import("./types").RunsResponse>(`/api/reports?${qs.toString()}`);
 };
 
-export const latestRun = (project_id: string) => api<import("./types").RunRow>(`/api/projects/${project_id}/latest`);
+export const latestRun = (project_id: string) =>
+  api<import("./types").RunRow>(`/api/projects/${project_id}/latest`);
 
-export const startFlow = (body: any) => api<{ ok: boolean; queued: boolean }>(`/api/flows/start`, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(body)
-});
+export const startFlow = (body: any) =>
+  api<{ ok: boolean; queued: boolean }>(`/api/flows/start`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
 
-export const replayFlow = (flow_id_ext: string, body: any) => api<{ ok: boolean; queued: boolean }>(`/api/flows/${flow_id_ext}/replay`, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(body)
-});
+export const replayFlow = (flow_id_ext: string, body: any) =>
+  api<{ ok: boolean; queued: boolean }>(`/api/flows/${encodeURIComponent(flow_id_ext)}/replay`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
 
-// GET /api/flows/{flow_id_ext}?project_id=...
+/** ✅ NEW: exact endpoint you requested */
 export const getFlow = (project_id: string, flow_id_ext: string) => {
   const qs = new URLSearchParams({ project_id });
-  return api<import("./types").FlowCapture>(`/api/flows/${encodeURIComponent(flow_id_ext)}?${qs.toString()}`);
+  return api<any>(`/api/flows/${encodeURIComponent(flow_id_ext)}?${qs.toString()}`);
 };
+
+// ⬇️ add these exports at the bottom (keep existing ones)
+export const getRunSummary = (project_id: string, run_id_ext: string) =>
+  api<any>(`/api/reports/${encodeURIComponent(project_id)}/${encodeURIComponent(run_id_ext)}/summary`);
+
+export const getReportFull = (project_id: string, run_id_ext: string) =>
+  api<any>(`/api/reports/${encodeURIComponent(project_id)}/${encodeURIComponent(run_id_ext)}`);

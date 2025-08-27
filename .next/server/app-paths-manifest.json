@@ -1,7 +1,0 @@
-{
-  "/page": "app/page.js",
-  "/flows/page": "app/flows/page.js",
-  "/replays/page": "app/replays/page.js",
-  "/replays/[run_id]/page": "app/replays/[run_id]/page.js",
-  "/flows/[flow_id]/page": "app/flows/[flow_id]/page.js"
-}

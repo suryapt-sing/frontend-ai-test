@@ -13,6 +13,7 @@ import {
   Cell,
 } from "recharts";
 
+/** Donut using { latest } shape (your existing API) */
 export function ProjectHealthDonut({ latest }: { latest: any | null }) {
   const data = useMemo(() => {
     const passed = latest?.passed ?? 0;
@@ -50,6 +51,11 @@ export function ProjectHealthDonut({ latest }: { latest: any | null }) {
       </PieChart>
     </ResponsiveContainer>
   );
+}
+
+/** Tiny adapter so you can pass {passed, failed, total} directly */
+export function RunHealthDonut({ passed = 0, failed = 0, total = 0 }: { passed?: number; failed?: number; total?: number }) {
+  return <ProjectHealthDonut latest={{ passed, total }} />;
 }
 
 export function PassRateTrend({ runs }: { runs: any | null }) {
