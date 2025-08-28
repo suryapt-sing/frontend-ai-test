@@ -41,16 +41,101 @@ export type PageRecord = {
   elements?: Record<string, ElementRecord>; // backend returns dict of elements
 };
 
-export type FlowCapture = {
-  project_id?: string;
-  flow_id_ext?: string;
-  start_url?: string | null;
-  started_at?: string | null;
-  pages?: PageRecord[];
-  navigations?: any[];
-  // Anything else your loader returns will be available via index access
-  [key: string]: any;
-};
-
 
 export type RunsResponse = { items: RunRow[]; count: number };
+
+
+// --- Flow Capture (from GET /api/flows/{flow_id_ext}?project_id=...) ---
+
+export interface FlowCapture {
+  project: {
+    id: string;
+    flow_id: string;
+    started_at?: string;
+    start_url?: string | null;
+  };
+  pages: FlowPage[];
+}
+
+export interface FlowPage {
+  url: string;
+  title?: string | null;
+  tab_id?: string | null;
+  first_seen_at?: string;
+  last_seen_at?: string;
+  elements: Record<string, FlowElement>;
+}
+
+export interface FlowElement {
+  element_id: string;                 // element_key from DB
+  tab_id?: string | null;
+  stable_fingerprint: string;
+  page_url: string;
+  semantic_role?: string | null;
+  html_tag?: string | null;
+  aria_role?: string | null;
+  text?: string | null;
+  labels?: any;
+  state?: any;
+  location?: any;
+  dom_hierarchy?: any[];
+  access?: any;
+  attributes?: any;
+  metadata?: any;
+  selectors?: {
+    preferred?: { value?: string;[k: string]: any };
+    [k: string]: any;
+  };
+  embedding?: { input_text?: string | null; vector_id?: any };
+  first_seen_at?: string;
+  last_seen_at?: string;
+  clicks: number;
+  inputs: number;
+  submits: number;
+  keys: number;
+  interaction_history: Array<{
+    action: string;                   // click/input/submit/keydown/enter
+    input_value?: string | null;
+    input_redacted?: boolean;
+    screenshot_path?: string | null;
+    admin_note?: string | null;
+    at: string;                       // ISO
+  }>;
+  versioning?: {
+    current_version: number;
+    versions: any[];
+  };
+}
+
+
+// --- Product & Flow types ---
+export type Product = {
+  id: string;
+  label: string;      // must be unique
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type Flow = {
+  id: string;
+  productLabel: string;   // tie by label for simplicity
+  featureName: string;
+  startUrl: string;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+// Input shapes
+export type CreateProductInput = {
+  label: string;
+  description: string;
+};
+
+export type CreateFlowInput = {
+  productLabel: string;
+  featureName: string;
+  startUrl: string;
+  description: string;
+};

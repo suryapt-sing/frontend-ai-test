@@ -26,12 +26,7 @@ export default async function Page() {
                 <td className="truncate max-w-[380px]">{f.start_url}</td>
                 <td>{new Date(f.started_at).toLocaleString()}</td>
                 <td className="text-right space-x-2">
-                  <a
-                    href={`/flows/${encodeURIComponent(f.flow_id_ext)}?project=${encodeURIComponent(f.project_id)}`}
-                    className="btn"
-                  >
-                    View
-                  </a>
+                  <a href={`/flows/${encodeURIComponent(f.flow_id_ext)}?project=${encodeURIComponent(f.project_id)}`} className="btn">View</a>
                   <ReplayFlowButton flowId={f.flow_id_ext} projectId={f.project_id} />
                 </td>
               </tr>

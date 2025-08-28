@@ -1,14 +1,19 @@
-import { latestRun, listRuns } from "@/lib/api";
+import { listRuns } from "@/lib/api";
 import { StatusBadge } from "@/components/StatusBadge";
 import QuickActionsClient from "@/components/QuickActionsClient";
 import { ProjectHealthDonut, PassRateTrend } from "@/components/DashboardChartsClient";
 
 export default async function Page() {
-  let latest: any = null;
-  try { latest = await latestRun("default.project"); } catch {}
-
+  // Fetch recent runs across ALL projects (no default project anywhere)
   let runs: any = null;
-  try { runs = await listRuns("default.project", undefined, 5, 0); } catch {}
+  try {
+    runs = await listRuns(undefined, undefined, 50, 0); // all projects, newest first
+  } catch {
+    runs = { items: [], count: 0 };
+  }
+
+  // Latest is simply the first (most recent) run from the list above
+  const latest = runs?.items?.[0] || null;
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -39,7 +44,7 @@ export default async function Page() {
               <th>Run ID</th><th>Status</th><th>Passed</th><th>Failed</th><th>Total</th><th>Duration</th><th>When</th>
             </tr></thead>
             <tbody>
-              {runs?.items?.map((r:any) => (
+              {runs?.items?.slice(0, 5).map((r:any) => (
                 <tr key={r.id}>
                   <td className="font-mono">{r.run_id_ext}</td>
                   <td><StatusBadge status={r.status} /></td>
@@ -50,6 +55,11 @@ export default async function Page() {
                   <td>{new Date(r.created_at).toLocaleString()}</td>
                 </tr>
               ))}
+              {!runs?.items?.length && (
+                <tr>
+                  <td colSpan={7} className="py-6 text-center text-sm text-gray-500">No runs found.</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
