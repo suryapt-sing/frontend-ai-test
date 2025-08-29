@@ -45,8 +45,6 @@ export type PageRecord = {
 export type RunsResponse = { items: RunRow[]; count: number };
 
 
-// --- Flow Capture (from GET /api/flows/{flow_id_ext}?project_id=...) ---
-
 export interface FlowCapture {
   project: {
     id: string;
@@ -109,33 +107,36 @@ export interface FlowElement {
 
 
 // --- Product & Flow types ---
-export type Product = {
-  id: string;
-  label: string;      // must be unique
-  description: string;
-  createdAt: string;
-  updatedAt: string;
+// Product
+export type Project = {
+  project_id: string;             // PK
+  project_label: string;          // unique
+  project_description: string;
+  created_at: string;
+  updated_at: string;
 };
 
+// Flow
 export type Flow = {
-  id: string;
-  productLabel: string;   // tie by label for simplicity
-  featureName: string;
-  startUrl: string;
-  description: string;
-  createdAt: string;
-  updatedAt: string;
+  flow_id: string;                // PK
+  flow_id_ext: string;            // external ref
+  project_id: string;             // FK
+  feature_name: string;
+  start_url: string;
+  flow_description: string;
+  created_at: string;
+  started_at: string;
 };
 
-// Input shapes
-export type CreateProductInput = {
-  label: string;
-  description: string;
+// Inputs
+export type CreateProjectInput = {
+  project_label: string;
+  project_description: string;
 };
 
 export type CreateFlowInput = {
-  productLabel: string;
-  featureName: string;
-  startUrl: string;
-  description: string;
+  project_id: string;
+  feature_name: string;
+  start_url: string;
+  flow_description: string;
 };

@@ -2,6 +2,7 @@ import { listFlows, getFlow, listRuns } from "@/lib/api";
 import { Tabs, TabPanel } from "@/components/Tabs";
 import { StatusBadge } from "@/components/StatusBadge";
 import ReplayFlowButton from "@/components/ReplayFlowButton";
+import StartFlowCaptureButton from "@/components/StartFlowCaptureButton";
 
 function toArr<T>(obj: Record<string, T> | undefined) {
   return Object.values(obj || {});
@@ -35,6 +36,9 @@ export default async function Page({
       capture = null;
     }
   }
+
+  // Prefer internal flow_id (UUID) from capture when available; fallback to external id from URL
+  const internalFlowId = capture?.project?.flow_id || flowId;
 
   // Recent runs for this project (to mirror your previous "Recent Runs" tab)
   let runs: any = { items: [], count: 0 };
@@ -76,6 +80,9 @@ export default async function Page({
             ) : null}
           </div>
           <div className="flex gap-2">
+            {projectId ? (
+              <StartFlowCaptureButton flowId={internalFlowId} projectId={projectId} label="Start Flow Capture" />
+            ) : null}
             {projectId ? <ReplayFlowButton flowId={flowId} projectId={projectId} /> : null}
             <a className="btn" href={`/replays?${new URLSearchParams({ project: projectId || "all" }).toString()}`}>Open Replays</a>
           </div>

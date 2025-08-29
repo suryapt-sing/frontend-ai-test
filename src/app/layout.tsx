@@ -4,6 +4,7 @@ import { ReactNode } from "react";
 import { Sidebar } from "../components/Sidebar";
 import { Topbar } from "../components/Topbar";
 import { ThemeProvider } from "next-themes";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
@@ -25,6 +26,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               <div className="container-app py-6">{children}</div>
             </main>
           </div>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
